@@ -127,3 +127,118 @@
     @apply font-sans;
     }
 }
+
+/* ── 프로필 페이지 커스텀 스타일 ── */
+
+/* 다크 메쉬 그라디언트 배경 */
+.profile-bg {
+  background-color: #0a0a0f;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 60% 30%, rgba(59, 130, 246, 0.12) 0%, transparent 50%);
+}
+
+/* 글로우 오브 애니메이션 */
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -30px) scale(1.05); }
+  66%       { transform: translate(-15px, 20px) scale(0.97); }
+}
+
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: orb-float 12s ease-in-out infinite;
+  pointer-events: none;
+}
+.orb-1 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+  top: -120px; left: -100px;
+  animation-delay: 0s;
+}
+.orb-2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, #ec4899, transparent 70%);
+  bottom: -80px; right: -80px;
+  animation-delay: -4s;
+}
+.orb-3 {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, #3b82f6, transparent 70%);
+  top: 40%; left: 60%;
+  animation-delay: -8s;
+}
+
+/* 아바타 그라디언트 링 */
+.avatar-ring {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899, #3b82f6);
+  padding: 3px;
+  border-radius: 9999px;
+}
+
+/* 글래스모피즘 링크 카드 */
+.link-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.link-card:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+}
+.link-card:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* 파비콘 컨테이너 글로우 */
+.favicon-wrap {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+}
+
+/* 그라디언트 텍스트 */
+.gradient-text {
+  background: linear-gradient(90deg, #c084fc, #f472b6, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 구분선 그라디언트 */
+.divider-gradient {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5), transparent);
+}
+
+/* 푸터 글로우 */
+.footer-badge {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 9999px;
+}
+
+/* 뱃지 shimmer 애니메이션 */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.shimmer-badge {
+  background: linear-gradient(90deg,
+    rgba(139,92,246,0.15) 0%,
+    rgba(236,72,153,0.3) 40%,
+    rgba(139,92,246,0.15) 80%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
