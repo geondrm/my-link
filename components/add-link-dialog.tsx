@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "@/data/links";
-import { Plus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Plus, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 
 /** 링크 이름 최대 글자 수 */
 const TITLE_MAX_LENGTH = 50;
@@ -25,7 +25,8 @@ interface FieldErrors {
 }
 
 interface AddLinkDialogProps {
-  onAdd: (link: Link) => void;
+  /** Firestore 저장을 포함한 비동기 추가 핸들러 */
+  onAdd: (draft: Omit<Link, "id">) => Promise<void>;
 }
 
 /** URL에서 http/https 없는 경우 https를 앞에 붙여 반환 */
@@ -73,6 +74,8 @@ function validateTitle(value: string): string | undefined {
 
 export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
   const [open, setOpen] = useState(false);
+  /** Firestore 저장 진행 중 여부 (중복 제출 방지) */
+  const [isSaving, setIsSaving] = useState(false);
 
   // 입력값 상태
   const [title, setTitle] = useState("");
@@ -109,7 +112,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
     setTouched((prev) => ({ ...prev, url: true }));
   }, []);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     // 제출 시 모든 필드를 touched 처리
@@ -121,16 +124,23 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
 
     if (titleErr || urlErr) return;
 
-    const newLink: Link = {
-      id: crypto.randomUUID(),
+    // Firestore에 저장할 draft (id는 Firestore가 생성)
+    const draft: Omit<Link, "id"> = {
       title: title.trim(),
       url: normalizeUrl(url),
       clickCount: 0,
     };
 
-    onAdd(newLink);
-    resetForm();
-    setOpen(false);
+    try {
+      setIsSaving(true);
+      await onAdd(draft);
+      resetForm();
+      setOpen(false);
+    } catch (err) {
+      console.error("링크 저장 실패:", err);
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   function resetForm() {
@@ -225,7 +235,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
       >
         <DialogHeader>
           <DialogTitle className="gradient-text text-lg font-bold">새 링크 추가</DialogTitle>
-          <DialogDescription className="text-white/40">
+          <DialogDescription className="text-indigo-400">
             프로필에 표시할 링크를 입력하세요.
           </DialogDescription>
         </DialogHeader>
@@ -234,7 +244,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
           {/* ── 링크 이름 ── */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="link-title" className="text-sm text-white/70">
+              <Label htmlFor="link-title" className="text-sm text-indigo-700">
                 링크 이름 <span className="text-red-400" aria-hidden="true">*</span>
               </Label>
               {/* 글자 수 카운터 */}
@@ -263,6 +273,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
               aria-invalid={!!titleError}
               autoFocus
               maxLength={TITLE_MAX_LENGTH + 1}
+              disabled={isSaving}
             />
             <div id="link-title-feedback">
               <FieldFeedback error={titleError} isTouched={touched.title} value={title} />
@@ -271,7 +282,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
 
           {/* ── URL ── */}
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="link-url" className="text-sm text-white/70">
+            <Label htmlFor="link-url" className="text-sm text-indigo-700">
               URL <span className="text-red-400" aria-hidden="true">*</span>
             </Label>
             <Input
@@ -285,13 +296,14 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
               aria-invalid={!!urlError}
               inputMode="url"
               autoComplete="url"
+              disabled={isSaving}
             />
             <div id="link-url-feedback">
               <FieldFeedback error={urlError} isTouched={touched.url} value={url} />
             </div>
             {/* http 없어도 자동 추가 안내 */}
             {!touched.url && (
-              <p className="text-[11px] text-white/25">
+              <p className="text-[11px] text-indigo-300">
                 https:// 없이 입력해도 자동으로 추가됩니다.
               </p>
             )}
@@ -302,7 +314,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
               id="cancel-link-btn"
               type="button"
               variant="ghost"
-              className="flex-1 rounded-xl border border-white/10 text-white/50 hover:bg-white/5 hover:text-white/80"
+              className="flex-1 rounded-xl border border-indigo-200 text-indigo-400 hover:bg-indigo-50 hover:text-indigo-600"
               onClick={() => handleOpenChange(false)}
             >
               취소
@@ -310,10 +322,18 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
             <Button
               id="submit-link-btn"
               type="submit"
-              disabled={touched.title && touched.url && !isFormValid}
+              disabled={(touched.title && touched.url && !isFormValid) || isSaving}
               className="flex-1 rounded-xl bg-purple-600 font-semibold text-white transition-opacity hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-live="polite"
             >
-              추가
+              {isSaving ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  저장 중...
+                </span>
+              ) : (
+                "추가"
+              )}
             </Button>
           </DialogFooter>
         </form>
