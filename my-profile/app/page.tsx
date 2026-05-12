@@ -1,17 +1,37 @@
+import Image from "next/image";
+import styles from "./page.module.css";
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-zinc-950">
-      <main className="flex flex-col items-center gap-6 text-center">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            홍길동
-          </h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400">
-            안녕하세요! 바이브 코딩을 배우고 있는 대학생입니다.
-          </p>
+    <main className={styles.container}>
+      <div className={styles.card}>
+        <Image
+          src="/profile_avatar.png"
+          alt="Profile Avatar"
+          width={120}
+          height={120}
+          className={styles.avatar}
+          priority
+        />
+        
+        <h1 className={styles.name}>홍길동</h1>
+        <p className={styles.bio}>
+          안녕하세요! 바이브 코딩을 배우고 있는 대학생입니다. 
+          아름답고 직관적인 UI/UX에 관심이 많습니다.
+        </p>
+
+        <div className={styles.links}>
+          <a href="https://github.com/geondrm" target="_blank" rel="noopener noreferrer" className={styles.linkButton}>
+            GitHub 프로필
+          </a>
+          <a href="#" className={styles.linkButton}>
+            블로그 (준비 중)
+          </a>
+          <a href="#" className={styles.linkButton}>
+            포트폴리오
+          </a>
         </div>
-        <div className="h-1 w-12 rounded-full bg-zinc-200 dark:bg-zinc-800" />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
