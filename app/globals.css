@@ -244,15 +244,54 @@
 }
 
 /* ── 링크 추가 버튼 ── */
+
+/* 기본 버튼 레이아웃 */
 .add-link-btn {
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .add-link-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.25);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 32px rgba(139, 92, 246, 0.45),
+    0 2px 8px rgba(236, 72, 153, 0.25);
 }
 .add-link-btn:active {
   transform: translateY(0);
+  box-shadow: 0 2px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* 그라디언트 배경 */
+.add-link-bg {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 40%, #ec4899 100%);
+  transition: opacity 0.2s ease;
+}
+.add-link-btn:hover .add-link-bg {
+  opacity: 0.9;
+}
+
+/* shimmer 흐름 애니메이션 */
+@keyframes add-link-sweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%)  skewX(-15deg); }
+}
+.add-link-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 100%
+  );
+  animation: add-link-sweep 2.4s ease-in-out infinite;
+}
+
+/* 아이콘 원형 */
+.add-link-icon-wrap {
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.add-link-btn:hover .add-link-icon-wrap {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 /* ── 다이얼로그 오버레이 ── */

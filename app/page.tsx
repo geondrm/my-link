@@ -52,7 +52,12 @@ export default function Page() {
         </header>
 
         {/* 구분선 */}
-        <div className="divider-gradient mb-8 w-full" aria-hidden="true" />
+        <div className="divider-gradient mb-6 w-full" aria-hidden="true" />
+
+        {/* ── 링크 추가 버튼 ── */}
+        <div className="mb-6 w-full">
+          <AddLinkDialog onAdd={handleAddLink} />
+        </div>
 
         {/* ── 링크 목록 ── */}
         <ul className="flex w-full flex-col gap-3" aria-label="링크 목록">
@@ -99,10 +104,6 @@ export default function Page() {
           ))}
         </ul>
 
-        {/* ── 링크 추가 버튼 ── */}
-        <div className="mt-4 w-full">
-          <AddLinkDialog onAdd={handleAddLink} />
-        </div>
 
         {/* ── 푸터 ── */}
         <footer className="mt-12">
