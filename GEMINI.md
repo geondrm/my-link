@@ -2,6 +2,31 @@
 
 This document provides foundational context and instructions for AI agents working on the MyLink project.
 
+## 🌐 언어 사용 규칙 (Language Policy) — 최우선 적용
+
+> **이 규칙은 아래 모든 지침보다 우선하며, 예외 없이 반드시 준수해야 합니다.**
+
+AI 에이전트는 이 프로젝트와 관련된 **모든 커뮤니케이션과 산출물에 한국어를 사용**해야 합니다.
+
+### 적용 범위
+
+- **대화 응답**: 사용자에게 전달하는 모든 메시지와 설명은 한국어로 작성합니다.
+- **계획 문서 (Implementation Plan / Task)**: AI가 생성하는 구현 계획, 태스크 목록, 단계별 작업 내용은 한국어로 작성합니다.
+- **워크스루 문서 (Walkthrough)**: 작업 과정을 설명하는 워크스루 문서는 한국어로 작성합니다.
+- **아티팩트 (Artifacts)**: 분석 보고서, 연구 노트, 실험 결과 등 AI가 생성하는 모든 마크다운 아티팩트는 한국어로 작성합니다.
+- **코드 주석**: 코드 내 주석(comment)과 JSDoc은 한국어로 작성합니다.
+- **커밋 메시지**: Git 커밋 메시지는 한국어로 작성합니다.
+
+### 예외 사항
+
+아래 항목은 영어를 그대로 사용합니다.
+
+- 코드 자체 (변수명, 함수명, 타입명 등)
+- 외부 라이브러리·API 이름 및 기술 용어 (예: `Next.js`, `TypeScript`, `shadcn/ui`)
+- 공식 문서의 인용 문구
+
+---
+
 ## Project Overview
 
 MyLink is a "Link-in-bio" style service that allows users to consolidate multiple social media, blog, and portfolio links into a single, shareable profile page.

@@ -1,9 +1,19 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import { links, getFaviconUrl } from "@/data/links";
+import { links as initialLinks, Link, getFaviconUrl } from "@/data/links";
 import { Card, CardContent } from "@/components/ui/card";
+import { AddLinkDialog } from "@/components/add-link-dialog";
 import { ExternalLink, Link2 } from "lucide-react";
 
 export default function Page() {
+  const [links, setLinks] = useState<Link[]>(initialLinks);
+
+  function handleAddLink(newLink: Link) {
+    setLinks((prev) => [...prev, newLink]);
+  }
+
   return (
     <main className="profile-bg relative flex min-h-svh flex-col items-center justify-start overflow-hidden px-4 py-16">
       {/* 배경 글로우 오브 */}
@@ -45,7 +55,7 @@ export default function Page() {
         <div className="divider-gradient mb-8 w-full" aria-hidden="true" />
 
         {/* ── 링크 목록 ── */}
-        <ul className="flex w-full flex-col gap-3">
+        <ul className="flex w-full flex-col gap-3" aria-label="링크 목록">
           {links.map((link, index) => (
             <li
               key={link.id}
@@ -56,6 +66,7 @@ export default function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/70"
+                aria-label={`${link.title} 링크 열기`}
               >
                 {/* shadcn Card + 커스텀 글래스모피즘 오버라이드 */}
                 <Card className="link-card group rounded-2xl border-0 bg-transparent shadow-none">
@@ -88,6 +99,11 @@ export default function Page() {
           ))}
         </ul>
 
+        {/* ── 링크 추가 버튼 ── */}
+        <div className="mt-4 w-full">
+          <AddLinkDialog onAdd={handleAddLink} />
+        </div>
+
         {/* ── 푸터 ── */}
         <footer className="mt-12">
           <div className="footer-badge px-4 py-2 text-xs text-white/30">
@@ -99,5 +115,3 @@ export default function Page() {
     </main>
   );
 }
-
-
