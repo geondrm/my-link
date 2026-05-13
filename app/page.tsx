@@ -60,22 +60,7 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
-/* ── 카운트업 애니메이션 훅 ── */
-function useCountUp(target: number, trigger: boolean, duration = 1600) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    let start = 0;
-    const step = target / (duration / 16);
-    const id = setInterval(() => {
-      start += step;
-      if (start >= target) { setVal(target); clearInterval(id); }
-      else setVal(Math.floor(start));
-    }, 16);
-    return () => clearInterval(id);
-  }, [trigger, target, duration]);
-  return val;
-}
+
 
 export default function Page() {
   const [links, setLinks] = useState<Link[]>([]);
@@ -92,10 +77,7 @@ export default function Page() {
   const stats = useInView(0.15);
   const cta = useInView(0.15);
 
-  // 카운트업 수치
-  const userCount = useCountUp(12000, stats.visible);
-  const linkCount = useCountUp(58000, stats.visible);
-  const clickCount = useCountUp(3200000, stats.visible);
+
 
   // ── Auth State 변화 감지 ─────────────────────────
   useEffect(() => {
@@ -302,16 +284,16 @@ export default function Page() {
           </div>
         </section>
 
-        {/* ── 숫자 섹션 ── */}
+        {/* ── 핵심 가치 섹션 ── */}
         <section className={`landing-section landing-stats ${stats.visible ? "in-view" : ""}`} ref={stats.ref} id="stats-section">
           <div className="section-orb section-orb-e" aria-hidden="true" />
 
           <div className="section-inner">
             <div className="stats-grid">
               {[
-                { value: userCount.toLocaleString() + "+", label: "가입 사용자" },
-                { value: linkCount.toLocaleString() + "+", label: "등록된 링크" },
-                { value: (clickCount / 1000000).toFixed(1) + "M+", label: "총 클릭 수" },
+                { value: "30초", label: "가입부터 완성까지" },
+                { value: "무제한", label: "링크 등록 개수" },
+                { value: "100%", label: "무료 이용" },
               ].map((s, i) => (
                 <div className="stat-item" key={i}>
                   <div className="stat-value">{s.value}</div>
