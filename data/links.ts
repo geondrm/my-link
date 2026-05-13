@@ -3,6 +3,7 @@ export interface Link {
   title: string;
   url: string;
   clickCount?: number; // 향후 클릭 조회수 기능을 위한 필드 (PRD 3. 향후 추가 예정 기능)
+  updatedAt?: number; // 수정된 시각 (밀리초)
 }
 
 /**

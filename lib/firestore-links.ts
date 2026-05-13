@@ -5,6 +5,9 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Link } from "@/data/links";
@@ -28,6 +31,7 @@ export async function fetchLinks(): Promise<Link[]> {
       title: data.title as string,
       url: data.url as string,
       clickCount: (data.clickCount as number) ?? 0,
+      updatedAt: data.updatedAt ? data.updatedAt.toMillis() : undefined,
     };
   });
 }
@@ -52,4 +56,23 @@ export async function addLink(
     url: link.url,
     clickCount: link.clickCount ?? 0,
   };
+}
+
+/**
+ * Firestore에 링크를 업데이트합니다.
+ * 업데이트된 시각의 대략적인 밀리초 값을 반환합니다.
+ */
+export async function updateLink(id: string, updates: Partial<Omit<Link, "id">>): Promise<number> {
+  const docRef = doc(db, "users", "anonymous", "links", id);
+  const now = Date.now();
+  await updateDoc(docRef, { ...updates, updatedAt: serverTimestamp() });
+  return now;
+}
+
+/**
+ * Firestore에서 링크를 삭제합니다.
+ */
+export async function deleteLink(id: string): Promise<void> {
+  const docRef = doc(db, "users", "anonymous", "links", id);
+  await deleteDoc(docRef);
 }

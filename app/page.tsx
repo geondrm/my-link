@@ -3,17 +3,19 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Link, getFaviconUrl } from "@/data/links";
-import { fetchLinks, addLink } from "@/lib/firestore-links";
+import { fetchLinks, addLink, updateLink, deleteLink } from "@/lib/firestore-links";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddLinkDialog } from "@/components/add-link-dialog";
-import { ExternalLink, Loader2 } from "lucide-react";
+import { LinkItem } from "@/components/link-item";
+import { Loader2 } from "lucide-react";
 
 export default function Page() {
   const [links, setLinks] = useState<Link[]>([]);
   /** Firestore에서 초기 링크를 불러오는 중인지 여부 */
   const [isLoading, setIsLoading] = useState(true);
   /** 새 링크를 Firestore에 저장하는 중인지 여부 */
-  const [isAdding, setIsAdding] = useState(false);
+  // isAdding state is no longer needed since it's handled by AddLinkDialog
+
 
   // ── 마운트 시 Firestore에서 링크 목록 로드 ──────────────────────
   useEffect(() => {
@@ -25,14 +27,23 @@ export default function Page() {
 
   // ── 링크 추가: Firestore 저장 후 로컬 상태 반영 ─────────────────
   const handleAddLink = useCallback(async (draft: Omit<Link, "id">) => {
-    setIsAdding(true);
-    try {
-      const saved = await addLink(draft);
-      // 최신순(desc) 정렬과 일관성을 유지하기 위해 새 링크를 맨 앞에 추가
-      setLinks((prev) => [saved, ...prev]);
-    } finally {
-      setIsAdding(false);
-    }
+    const saved = await addLink(draft);
+    // 최신순(desc) 정렬과 일관성을 유지하기 위해 새 링크를 맨 앞에 추가
+    setLinks((prev) => [saved, ...prev]);
+  }, []);
+
+  // ── 링크 수정: Firestore 업데이트 후 로컬 상태 반영 ───────────────
+  const handleUpdateLink = useCallback(async (id: string, updates: Partial<Omit<Link, "id">>) => {
+    const updatedAt = await updateLink(id, updates);
+    setLinks((prev) =>
+      prev.map((link) => (link.id === id ? { ...link, ...updates, updatedAt } : link))
+    );
+  }, []);
+
+  // ── 링크 삭제: Firestore 삭제 후 로컬 상태 반영 ─────────────────
+  const handleDeleteLink = useCallback(async (id: string) => {
+    await deleteLink(id);
+    setLinks((prev) => prev.filter((link) => link.id !== id));
   }, []);
 
   return (
@@ -111,58 +122,16 @@ export default function Page() {
           </div>
         ) : (
           <div className="flex w-full flex-col gap-3">
-            {/* 추가 중 인디케이터 */}
-            {isAdding && (
-              <div
-                className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-amber-700"
-                role="status"
-                aria-live="polite"
-              >
-                <Loader2 className="h-3.5 w-3.5 animate-spin flex-shrink-0" aria-hidden="true" />
-                <span className="text-xs font-medium">링크를 저장하는 중...</span>
-              </div>
-            )}
+
             <ul className="flex w-full flex-col gap-3" aria-label="링크 목록">
             {links.map((link, index) => (
-              <li
+              <LinkItem
                 key={link.id}
-                style={{ animationDelay: `${index * 80}ms` }}
-              >
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/70"
-                  aria-label={`${link.title} 링크 열기`}
-                >
-                  {/* shadcn Card + 커스텀 글래스모피즘 오버라이드 */}
-                  <Card className="link-card group rounded-2xl border-0 bg-transparent shadow-none">
-                    <CardContent className="flex items-center gap-4 px-5 py-4">
-                      {/* Favicon */}
-                      <div className="favicon-wrap relative h-10 w-10 flex-shrink-0 overflow-hidden">
-                        <Image
-                          src={getFaviconUrl(link.url, 64)}
-                          alt={`${link.title} 아이콘`}
-                          fill
-                          className="object-contain p-1.5"
-                          unoptimized
-                        />
-                      </div>
-
-                      {/* 링크 제목 */}
-                      <span className="flex-1 text-sm font-semibold text-stone-700 group-hover:text-stone-900 transition-colors">
-                        {link.title}
-                      </span>
-
-                      {/* 외부 링크 아이콘 */}
-                      <ExternalLink
-                        className="h-4 w-4 flex-shrink-0 text-stone-300 transition-colors group-hover:text-amber-600"
-                        aria-hidden="true"
-                      />
-                    </CardContent>
-                  </Card>
-                </a>
-              </li>
+                link={link}
+                index={index}
+                onUpdate={handleUpdateLink}
+                onDelete={handleDeleteLink}
+              />
             ))}
             </ul>
           </div>

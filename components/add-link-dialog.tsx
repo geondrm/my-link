@@ -178,15 +178,6 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
       );
     }
 
-    if (value.trim()) {
-      return (
-        <p className="flex items-center gap-1 text-xs text-emerald-400" aria-live="polite">
-          <CheckCircle2 className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-          확인됐습니다.
-        </p>
-      );
-    }
-
     return null;
   }
 
@@ -326,14 +317,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
               className="flex-1 rounded-xl bg-purple-600 font-semibold text-white transition-opacity hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
               aria-live="polite"
             >
-              {isSaving ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                  저장 중...
-                </span>
-              ) : (
-                "추가"
-              )}
+              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "추가"}
             </Button>
           </DialogFooter>
         </form>
