@@ -197,21 +197,13 @@ export function ProfileHeader({ user, profile, onProfileUpdate }: ProfileHeaderP
       <div className="relative mb-1 group cursor-pointer" onClick={() => setIsEditing(true)}>
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-300 via-orange-200 to-blue-200 blur-md opacity-70 scale-110 transition-transform group-hover:scale-125" aria-hidden="true" />
         <div className="relative h-24 w-24 rounded-full border-4 border-white bg-white/80 backdrop-blur-sm flex items-center justify-center overflow-hidden shadow-lg">
-          {user.photoURL ? (
-            <Image
-              src={user.photoURL}
-              alt={`${user.displayName} 프로필 사진`}
-              fill
-              className="object-cover"
-              unoptimized
-            />
-          ) : null}
-          <span
-            className={`text-2xl font-bold tracking-tight text-indigo-600 select-none absolute inset-0 items-center justify-center ${user.photoURL ? 'hidden' : 'flex'}`}
-            aria-hidden="true"
-          >
-            {user.displayName?.charAt(0).toUpperCase() || "U"}
-          </span>
+          <Image
+            src="/avatar.jpg"
+            alt={`${user.displayName} 프로필 사진`}
+            fill
+            className="object-cover"
+            unoptimized
+          />
         </div>
         {/* 편집 오버레이 아이콘 */}
         <div className="absolute bottom-0 right-0 bg-white border-2 border-pink-100 rounded-full p-1.5 shadow-md text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 translate-y-2">

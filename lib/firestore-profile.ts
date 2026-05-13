@@ -32,6 +32,20 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 }
 
 /**
+ * Firestore에서 slug(displayname)를 통해 사용자 프로필을 가져옵니다.
+ */
+export async function getUserProfileBySlug(slug: string): Promise<UserProfile | null> {
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("slug", "==", slug));
+  const snapshot = await getDocs(q);
+
+  if (!snapshot.empty) {
+    return snapshot.docs[0].data() as UserProfile;
+  }
+  return null;
+}
+
+/**
  * 사용자 프로필을 생성하거나 업데이트합니다.
  */
 export async function saveUserProfile(uid: string, profile: Partial<UserProfile>): Promise<void> {

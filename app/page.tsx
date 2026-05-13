@@ -7,10 +7,17 @@ import { fetchLinks, addLink, updateLink, deleteLink } from "@/lib/firestore-lin
 import { AddLinkDialog } from "@/components/add-link-dialog";
 import { LinkItem } from "@/components/link-item";
 import { ProfileHeader } from "@/components/profile-header";
-import { Loader2 } from "lucide-react";
+import { Loader2, User as UserIcon, LogOut, Link as LinkIcon } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from "firebase/auth";
 import { getUserProfile, saveUserProfile, UserProfile } from "@/lib/firestore-profile";
+import NextLink from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Page() {
   const [links, setLinks] = useState<Link[]>([]);
@@ -110,15 +117,37 @@ export default function Page() {
         </div>
         {!authLoading && user && (
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-stone-800 bg-white/50 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-sm border border-white/40 hidden sm:block">
-              {user.displayName}
-            </span>
-            <button 
-              onClick={() => signOut(auth)} 
-              className="text-sm px-4 py-1.5 bg-white/80 hover:bg-white text-stone-800 rounded-full font-semibold transition-all shadow-sm border border-stone-200 hover:shadow-md active:scale-95"
-            >
-              로그아웃
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 text-sm font-medium text-stone-800 bg-white/70 px-4 py-2 rounded-full backdrop-blur-sm shadow-sm border border-white hover:bg-white hover:shadow-md transition-all">
+                  <Image
+                    src="/avatar.jpg"
+                    alt="프로필"
+                    width={20}
+                    height={20}
+                    className="rounded-full object-cover"
+                  />
+                  <span className="hidden sm:block font-bold">{user.displayName}</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 rounded-2xl border-stone-100 shadow-xl bg-white/95 backdrop-blur-md p-2">
+                {profile && (
+                  <DropdownMenuItem asChild className="rounded-xl cursor-pointer hover:bg-pink-50 hover:text-pink-600 focus:bg-pink-50 focus:text-pink-600 transition-colors p-3 font-medium">
+                    <NextLink href={`/${profile.slug}`} className="flex items-center gap-2">
+                      <LinkIcon className="w-4 h-4" />
+                      내 페이지 보기
+                    </NextLink>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem 
+                  onClick={() => signOut(auth)} 
+                  className="rounded-xl cursor-pointer hover:bg-red-50 hover:text-red-600 focus:bg-red-50 focus:text-red-600 transition-colors p-3 font-medium text-red-500 mt-1"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  로그아웃
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>

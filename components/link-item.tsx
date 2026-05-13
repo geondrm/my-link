@@ -61,11 +61,12 @@ function validateTitle(value: string): string | undefined {
 interface LinkItemProps {
   link: Link;
   index: number;
-  onUpdate: (id: string, updates: Partial<Omit<Link, "id">>) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
+  onUpdate?: (id: string, updates: Partial<Omit<Link, "id">>) => Promise<void>;
+  onDelete?: (id: string) => Promise<void>;
+  isPublic?: boolean;
 }
 
-export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
+export function LinkItem({ link, index, onUpdate, onDelete, isPublic }: LinkItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -107,10 +108,12 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
 
     try {
       setIsSaving(true);
-      await onUpdate(link.id, {
-        title: title.trim(),
-        url: normalizeUrl(url),
-      });
+      if (onUpdate) {
+        await onUpdate(link.id, {
+          title: title.trim(),
+          url: normalizeUrl(url),
+        });
+      }
       setIsEditing(false);
     } catch (err) {
       console.error("링크 수정 실패:", err);
@@ -122,7 +125,9 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
   async function handleDeleteConfirm() {
     try {
       setIsDeleteLoading(true);
-      await onDelete(link.id);
+      if (onDelete) {
+        await onDelete(link.id);
+      }
       setIsDeleting(false);
     } catch (err) {
       console.error("링크 삭제 실패:", err);
@@ -305,29 +310,31 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
           </Card>
         </a>
 
-        {/* 액션 버튼들 (항상 표시되도록 right-4에 고정) */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 z-10">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsEditing(true);
-            }}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-stone-100 text-stone-400 shadow-sm transition-transform hover:scale-110 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50"
-            aria-label="수정"
-          >
-            <Edit2 className="h-4 w-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsDeleting(true);
-            }}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-stone-100 text-stone-400 shadow-sm transition-transform hover:scale-110 hover:border-red-200 hover:text-red-500 hover:bg-red-50"
-            aria-label="삭제"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
+        {/* 액션 버튼들 (항상 표시되도록 right-4에 고정, isPublic 아닐 때만) */}
+        {!isPublic && (
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 z-10">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setIsEditing(true);
+              }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-stone-100 text-stone-400 shadow-sm transition-transform hover:scale-110 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50"
+              aria-label="수정"
+            >
+              <Edit2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setIsDeleting(true);
+              }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-stone-100 text-stone-400 shadow-sm transition-transform hover:scale-110 hover:border-red-200 hover:text-red-500 hover:bg-red-50"
+              aria-label="삭제"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 삭제 확인 모달 */}
@@ -362,7 +369,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               variant="destructive"
               onClick={handleDeleteConfirm}
               disabled={isDeleteLoading}
-              className="flex-1 rounded-2xl font-bold h-11 bg-red-500 hover:bg-red-600 border-0"
+              className="flex-1 rounded-2xl font-bold h-11 bg-red-500 hover:bg-red-600 text-white border-0"
             >
               {isDeleteLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "삭제하기"}
             </Button>
