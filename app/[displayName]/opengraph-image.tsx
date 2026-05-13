@@ -10,9 +10,10 @@ export const contentType = "image/png";
 export default async function OGImage({
   params,
 }: {
-  params: { displayName: string };
+  params: Promise<{ displayName: string }>;
 }) {
-  const profile = await getProfileBySlugServer(params.displayName);
+  const { displayName } = await params;
+  const profile = await getProfileBySlugServer(displayName);
 
   // 프로필이 없으면 기본 이미지 반환
   if (!profile) {

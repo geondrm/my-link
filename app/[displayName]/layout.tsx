@@ -4,9 +4,10 @@ import { getProfileBySlugServer } from "@/lib/firestore-server";
 export async function generateMetadata({
   params,
 }: {
-  params: { displayName: string };
+  params: Promise<{ displayName: string }>;
 }): Promise<Metadata> {
-  const profile = await getProfileBySlugServer(params.displayName);
+  const { displayName } = await params;
+  const profile = await getProfileBySlugServer(displayName);
 
   if (!profile) {
     return {

@@ -34,15 +34,29 @@ import {
 
 /* ── 스크롤 감지 훅 ── */
 function useInView(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const ref = useCallback(
+    (node: HTMLDivElement | null) => {
+      // 이전 observer 정리
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+
+      if (!node) return;
+
+      const obs = new IntersectionObserver(
+        ([e]) => { if (e.isIntersecting) setVisible(true); },
+        { threshold }
+      );
+      obs.observe(node);
+      observerRef.current = obs;
+    },
+    [threshold]
+  );
+
   return { ref, visible };
 }
 
