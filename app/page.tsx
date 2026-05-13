@@ -6,14 +6,17 @@ import { Link } from "@/data/links";
 import { fetchLinks, addLink, updateLink, deleteLink } from "@/lib/firestore-links";
 import { AddLinkDialog } from "@/components/add-link-dialog";
 import { LinkItem } from "@/components/link-item";
+import { ProfileHeader } from "@/components/profile-header";
 import { Loader2 } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from "firebase/auth";
+import { getUserProfile, saveUserProfile, UserProfile } from "@/lib/firestore-profile";
 
 export default function Page() {
   const [links, setLinks] = useState<Link[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -26,18 +29,38 @@ export default function Page() {
     return () => unsubscribe();
   }, []);
 
-  // ── 로그인 된 경우 마운트 시 Firestore에서 링크 목록 로드 ──────────────────────
+  // ── 로그인 된 경우 마운트 시 Firestore에서 사용자 프로필 및 링크 목록 로드 ──────────────────────
   useEffect(() => {
     if (!user) {
       setLinks([]);
+      setProfile(null);
       setIsLoading(false);
       return;
     }
     
     setIsLoading(true);
-    fetchLinks(user.uid)
+    
+    // 프로필 정보 로드
+    getUserProfile(user.uid)
+      .then(async (fetchedProfile) => {
+        if (fetchedProfile) {
+          setProfile(fetchedProfile);
+        } else {
+          // 최초 로그인 시 기본 프로필 생성
+          const defaultProfile: UserProfile = {
+            uid: user.uid,
+            username: user.displayName || "사용자",
+            slug: user.email?.split('@')[0] || `user_${user.uid.substring(0,6)}`,
+            bio: "마이링크에 오신 것을 환영합니다!",
+            photoURL: user.photoURL || undefined
+          };
+          await saveUserProfile(user.uid, defaultProfile);
+          setProfile(defaultProfile);
+        }
+      })
+      .then(() => fetchLinks(user.uid))
       .then((fetched) => setLinks(fetched))
-      .catch((err) => console.error("링크 불러오기 실패:", err))
+      .catch((err) => console.error("데이터 불러오기 실패:", err))
       .finally(() => setIsLoading(false));
   }, [user]);
 
@@ -133,53 +156,8 @@ export default function Page() {
         /* 콘텐츠 래퍼 */
         <div className="relative z-10 flex w-full max-w-sm flex-col items-center">
 
-          {/* ── 프로필 헤더 ── */}
-          <header className="mb-10 flex flex-col items-center gap-3 text-center">
-
-            {/* 원형 아바타 */}
-            <div className="relative mb-1">
-              {/* 바깥 글로우 링 (캐주얼 파스텔 테마) */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-300 via-orange-200 to-blue-200 blur-md opacity-70 scale-110" aria-hidden="true" />
-              <div className="relative h-24 w-24 rounded-full border-4 border-white bg-white/80 backdrop-blur-sm flex items-center justify-center overflow-hidden shadow-lg">
-                {user.photoURL ? (
-                  <Image
-                    src={user.photoURL}
-                    alt={`${user.displayName} 프로필 사진`}
-                    fill
-                    className="object-cover"
-                    onError={(e) => {
-                      const target = e.currentTarget as HTMLImageElement;
-                      target.style.display = "none";
-                      const fallback = target.nextElementSibling as HTMLElement | null;
-                      if (fallback) fallback.style.display = "flex";
-                    }}
-                    unoptimized
-                  />
-                ) : null}
-                <span
-                  className={`text-2xl font-bold tracking-tight text-indigo-600 select-none absolute inset-0 items-center justify-center ${user.photoURL ? 'hidden' : 'flex'}`}
-                  aria-hidden="true"
-                >
-                  {user.displayName?.charAt(0).toUpperCase() || "U"}
-                </span>
-              </div>
-            </div>
-
-            {/* 이름 */}
-            <h1 className="text-2xl font-black tracking-tight text-stone-800">
-              {user.displayName || "사용자"}
-            </h1>
-
-            {/* 핸들 */}
-            <p className="text-sm text-stone-500 font-bold tracking-wide">
-              @{user.email?.split('@')[0] || "user"}
-            </p>
-
-            {/* 소개 */}
-            <p className="text-sm text-stone-500 leading-relaxed font-medium">
-              마이링크에 오신 것을 환영합니다!
-            </p>
-          </header>
+          {/* ── 프로필 헤더 (인라인 편집 지원) ── */}
+          <ProfileHeader user={user} profile={profile} onProfileUpdate={setProfile} />
 
           {/* 구분선 */}
           <div className="divider-gradient mb-6 w-full" aria-hidden="true" />
