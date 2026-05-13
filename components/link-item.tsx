@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import Image from "next/image";
 import { Link, getFaviconUrl } from "@/data/links";
 import { Card, CardContent } from "@/components/ui/card";
-import { ExternalLink, Edit2, Trash2, Loader2, CheckCircle2, AlertCircle, X } from "lucide-react";
+import { Edit2, Trash2, Loader2, CheckCircle2, AlertCircle, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -274,7 +274,7 @@ export function LinkItem({ link, index, onUpdate, onDelete, isPublic }: LinkItem
           aria-label={`${link.title} 링크 열기`}
         >
           <Card className="link-card border-0 shadow-none transition-all duration-300">
-            <CardContent className="flex items-center gap-4 px-5 py-4 pr-24">
+            <CardContent className="flex items-center gap-4 px-5 py-4 pr-20">
               <div className="favicon-wrap relative h-10 w-10 flex-shrink-0 overflow-hidden">
                 <Image
                   src={getFaviconUrl(link.url, 64)}
@@ -301,11 +301,6 @@ export function LinkItem({ link, index, onUpdate, onDelete, isPublic }: LinkItem
                   </span>
                 )}
               </div>
-
-              <ExternalLink
-                className="h-5 w-5 flex-shrink-0 text-stone-300 transition-colors group-hover:text-pink-400 hidden md:block"
-                aria-hidden="true"
-              />
             </CardContent>
           </Card>
         </a>
