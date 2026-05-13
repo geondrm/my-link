@@ -179,13 +179,13 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
   if (isEditing) {
     return (
       <li style={{ animationDelay: `${index * 80}ms` }}>
-        <Card className="link-card rounded-2xl border border-white/10 bg-[#13131f] shadow-lg overflow-hidden">
+        <Card className="link-card rounded-[28px] border-4 border-pink-100 bg-white shadow-lg overflow-hidden">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white">링크 수정</h3>
+              <h3 className="text-sm font-black text-stone-700">링크 수정</h3>
               <button 
                 onClick={handleCancelEdit}
-                className="text-white/50 hover:text-white transition-colors"
+                className="text-stone-400 hover:text-stone-600 transition-colors bg-stone-100 rounded-full p-1"
                 aria-label="취소"
               >
                 <X className="h-4 w-4" />
@@ -194,11 +194,11 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
             <form onSubmit={handleSave} noValidate className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor={`edit-title-${link.id}`} className="text-xs text-indigo-400">
+                  <Label htmlFor={`edit-title-${link.id}`} className="text-xs font-bold text-stone-500">
                     링크 이름
                   </Label>
-                  <span className={`text-[10px] tabular-nums transition-colors ${
-                    title.length > TITLE_MAX_LENGTH ? "text-red-400" : "text-white/30"
+                  <span className={`text-[10px] tabular-nums transition-colors font-semibold ${
+                    title.length > TITLE_MAX_LENGTH ? "text-red-400" : "text-stone-400"
                   }`}>
                     {title.length} / {TITLE_MAX_LENGTH}
                   </span>
@@ -217,7 +217,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor={`edit-url-${link.id}`} className="text-xs text-indigo-400">
+                <Label htmlFor={`edit-url-${link.id}`} className="text-xs font-bold text-stone-500">
                   URL
                 </Label>
                 <Input
@@ -238,14 +238,14 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
                   variant="ghost"
                   onClick={handleCancelEdit}
                   disabled={isSaving}
-                  className="flex-1 rounded-xl border border-white/10 text-white/70 hover:bg-white/5"
+                  className="flex-1 rounded-2xl border-2 border-stone-200 text-stone-600 hover:bg-stone-100 font-bold"
                 >
                   취소
                 </Button>
                 <Button
                   type="submit"
                   disabled={(touched.title && touched.url && !isFormValid) || isSaving}
-                  className="flex-1 rounded-xl bg-purple-600 font-semibold text-white hover:bg-purple-500 disabled:opacity-50"
+                  className="flex-1 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-400 font-bold text-white hover:opacity-90 disabled:opacity-50 border-0"
                 >
                   {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "저장"}
                 </Button>
@@ -265,10 +265,10 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/70"
+          className="block rounded-[28px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-300/50"
           aria-label={`${link.title} 링크 열기`}
         >
-          <Card className="link-card rounded-2xl border-0 bg-transparent shadow-none transition-all duration-300">
+          <Card className="link-card border-0 shadow-none transition-all duration-300">
             <CardContent className="flex items-center gap-4 px-5 py-4 pr-24">
               <div className="favicon-wrap relative h-10 w-10 flex-shrink-0 overflow-hidden">
                 <Image
@@ -281,7 +281,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               </div>
 
               <div className="flex-1 flex flex-col justify-center">
-                <span className="text-sm font-semibold text-stone-700 group-hover:text-stone-900 transition-colors">
+                <span className="text-base font-black text-stone-700 group-hover:text-stone-900 transition-colors">
                   {link.title}
                 </span>
                 {link.updatedAt && (
@@ -298,7 +298,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               </div>
 
               <ExternalLink
-                className="h-4 w-4 flex-shrink-0 text-stone-300 transition-colors group-hover:text-amber-600 hidden md:block"
+                className="h-5 w-5 flex-shrink-0 text-stone-300 transition-colors group-hover:text-pink-400 hidden md:block"
                 aria-hidden="true"
               />
             </CardContent>
@@ -312,7 +312,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               e.preventDefault();
               setIsEditing(true);
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-stone-200 text-stone-500 shadow-sm transition-colors hover:bg-stone-50 hover:text-purple-600"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-stone-100 text-stone-400 shadow-sm transition-transform hover:scale-110 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50"
             aria-label="수정"
           >
             <Edit2 className="h-4 w-4" />
@@ -322,7 +322,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               e.preventDefault();
               setIsDeleting(true);
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-stone-200 text-stone-500 shadow-sm transition-colors hover:bg-stone-50 hover:text-red-500"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-stone-100 text-stone-400 shadow-sm transition-transform hover:scale-110 hover:border-red-200 hover:text-red-500 hover:bg-red-50"
             aria-label="삭제"
           >
             <Trash2 className="h-4 w-4" />
@@ -332,13 +332,13 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
 
       {/* 삭제 확인 모달 */}
       <Dialog open={isDeleting} onOpenChange={setIsDeleting}>
-        <DialogContent className="mx-auto max-w-sm rounded-2xl border border-stone-200 bg-white p-6 shadow-xl">
+        <DialogContent className="mx-auto max-w-sm rounded-[32px] border-4 border-white bg-white p-6 shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-stone-800">
+            <DialogTitle className="text-2xl font-black text-stone-800">
               정말 삭제하시겠습니까?
             </DialogTitle>
             <DialogDescription className="mt-3 text-sm text-stone-600">
-              <span className="font-semibold text-stone-900 bg-stone-100 px-2 py-1 rounded-md inline-block mb-2">
+              <span className="font-bold text-stone-900 bg-stone-100 px-3 py-1.5 rounded-xl inline-block mb-2">
                 {link.title}
               </span>
               <br />
@@ -353,7 +353,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               variant="outline"
               onClick={() => setIsDeleting(false)}
               disabled={isDeleteLoading}
-              className="flex-1 rounded-xl border-stone-200 text-stone-600 hover:bg-stone-50"
+              className="flex-1 rounded-2xl border-2 border-stone-200 text-stone-600 hover:bg-stone-100 font-bold h-11"
             >
               취소
             </Button>
@@ -362,7 +362,7 @@ export function LinkItem({ link, index, onUpdate, onDelete }: LinkItemProps) {
               variant="destructive"
               onClick={handleDeleteConfirm}
               disabled={isDeleteLoading}
-              className="flex-1 rounded-xl"
+              className="flex-1 rounded-2xl font-bold h-11 bg-red-500 hover:bg-red-600 border-0"
             >
               {isDeleteLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "삭제하기"}
             </Button>

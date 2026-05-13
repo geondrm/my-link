@@ -188,12 +188,12 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
     const value = field === "title" ? title : url;
 
     const base =
-      "dialog-input rounded-xl bg-white/5 text-white placeholder:text-white/20 transition-all duration-150 focus-visible:ring-0";
+      "dialog-input focus-visible:ring-0 w-full";
 
-    if (!isTouched) return `${base} border-white/10 focus-visible:border-purple-500/60`;
-    if (hasError) return `${base} border-red-500/60 focus-visible:border-red-500/80`;
-    if (value.trim()) return `${base} border-emerald-500/50 focus-visible:border-emerald-400/70`;
-    return `${base} border-white/10 focus-visible:border-purple-500/60`;
+    if (!isTouched) return `${base} border-stone-200`;
+    if (hasError) return `${base} border-red-300 focus-visible:border-red-400`;
+    if (value.trim()) return `${base} border-green-300 focus-visible:border-green-400`;
+    return `${base} border-stone-200`;
   }
 
   return (
@@ -211,22 +211,22 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
           {/* shimmer 레이어 */}
           <span className="add-link-shimmer absolute inset-0 rounded-2xl" aria-hidden="true" />
           {/* 버튼 내용 */}
-          <span className="relative flex items-center justify-center gap-2.5 text-sm">
-            <span className="add-link-icon-wrap flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
-              <Plus className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-90" />
+          <span className="relative flex items-center justify-center gap-2.5 text-base">
+            <span className="add-link-icon-wrap flex h-8 w-8 items-center justify-center rounded-full">
+              <Plus className="h-5 w-5 text-stone-700 transition-transform duration-300 group-hover:rotate-90" />
             </span>
-            새 링크 추가하기
+            <span className="text-stone-800">새 링크 추가하기</span>
           </span>
         </button>
       </DialogTrigger>
 
       <DialogContent
         id="add-link-dialog"
-        className="add-link-dialog mx-auto max-w-sm rounded-2xl border border-white/10 bg-[#13131f] text-white shadow-2xl"
+        className="add-link-dialog mx-auto max-w-sm shadow-2xl"
       >
         <DialogHeader>
-          <DialogTitle className="gradient-text text-lg font-bold">새 링크 추가</DialogTitle>
-          <DialogDescription className="text-indigo-400">
+          <DialogTitle className="gradient-text text-2xl font-black">새 링크 추가</DialogTitle>
+          <DialogDescription className="text-stone-500 font-medium">
             프로필에 표시할 링크를 입력하세요.
           </DialogDescription>
         </DialogHeader>
@@ -235,17 +235,17 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
           {/* ── 링크 이름 ── */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="link-title" className="text-sm text-indigo-700">
-                링크 이름 <span className="text-red-400" aria-hidden="true">*</span>
+              <Label htmlFor="link-title" className="text-sm font-bold text-stone-600">
+                링크 이름 <span className="text-pink-400" aria-hidden="true">*</span>
               </Label>
               {/* 글자 수 카운터 */}
               <span
-                className={`text-xs tabular-nums transition-colors ${
+                className={`text-xs tabular-nums transition-colors font-bold ${
                   title.length > TITLE_MAX_LENGTH
                     ? "text-red-400"
                     : title.length > TITLE_MAX_LENGTH * 0.8
-                    ? "text-amber-400"
-                    : "text-white/30"
+                    ? "text-orange-400"
+                    : "text-stone-400"
                 }`}
                 aria-live="polite"
                 aria-label={`${title.length}자 / 최대 ${TITLE_MAX_LENGTH}자`}
@@ -273,8 +273,8 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
 
           {/* ── URL ── */}
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="link-url" className="text-sm text-indigo-700">
-              URL <span className="text-red-400" aria-hidden="true">*</span>
+            <Label htmlFor="link-url" className="text-sm font-bold text-stone-600">
+              URL <span className="text-pink-400" aria-hidden="true">*</span>
             </Label>
             <Input
               id="link-url"
@@ -294,7 +294,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
             </div>
             {/* http 없어도 자동 추가 안내 */}
             {!touched.url && (
-              <p className="text-[11px] text-indigo-300">
+              <p className="text-[11px] text-stone-400 font-medium">
                 https:// 없이 입력해도 자동으로 추가됩니다.
               </p>
             )}
@@ -305,7 +305,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
               id="cancel-link-btn"
               type="button"
               variant="ghost"
-              className="flex-1 rounded-xl border border-indigo-200 text-indigo-400 hover:bg-indigo-50 hover:text-indigo-600"
+              className="flex-1 rounded-2xl border-2 border-stone-200 text-stone-600 hover:bg-stone-50 font-bold h-12"
               onClick={() => handleOpenChange(false)}
             >
               취소
@@ -314,7 +314,7 @@ export function AddLinkDialog({ onAdd }: AddLinkDialogProps) {
               id="submit-link-btn"
               type="submit"
               disabled={(touched.title && touched.url && !isFormValid) || isSaving}
-              className="flex-1 rounded-xl bg-purple-600 font-semibold text-white transition-opacity hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex-1 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-400 font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 border-0 h-12"
               aria-live="polite"
             >
               {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "추가"}

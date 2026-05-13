@@ -128,202 +128,149 @@
     }
 }
 
-/* ── 프로필 페이지 커스텀 스타일 (강아지 팔레트 테마) ── */
+/* ── 프로필 페이지 커스텀 스타일 (캐주얼 파스텔 테마) ── */
 
-/* 따뜻한 크림-아이보리 배경 + 부드러운 베이지·스모키블루 그라디언트 */
 .profile-bg {
-  background-color: #faf8f4;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 10% 0%,  rgba(220, 205, 185, 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 50% at 90% 85%, rgba(180, 195, 210, 0.45) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 55% 45%, rgba(235, 225, 210, 0.35) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 35% at 25% 75%, rgba(195, 185, 170, 0.25) 0%, transparent 50%);
+  background-color: #faf7f5;
+  background-image: 
+    radial-gradient(ellipse 60% 60% at 20% 10%, rgba(255, 214, 224, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(200, 231, 255, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 90% 20%, rgba(226, 240, 203, 0.6) 0%, transparent 50%);
 }
 
-/* 글로우 오브 애니메이션 */
-@keyframes orb-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(20px, -30px) scale(1.05); }
-  66%       { transform: translate(-15px, 20px) scale(0.97); }
+/* 통통 튀는 오브 애니메이션 */
+@keyframes orb-bounce {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(20px) scale(1.05); }
 }
 
 .orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.6;
-  animation: orb-float 12s ease-in-out infinite;
+  filter: blur(80px);
+  opacity: 0.8;
+  animation: orb-bounce 4s ease-in-out infinite alternate;
   pointer-events: none;
 }
-/* 베이지-샌드 오브 */
 .orb-1 {
-  width: 420px; height: 420px;
-  background: radial-gradient(circle, #d4bfa0, transparent 70%);
-  top: -140px; left: -120px;
-  animation-delay: 0s;
+  width: 350px; height: 350px;
+  background: #ffb7b2;
+  top: -100px; left: -100px;
 }
-/* 스모키 블루-그레이 오브 */
 .orb-2 {
-  width: 360px; height: 360px;
-  background: radial-gradient(circle, #9fb4c7, transparent 70%);
-  bottom: -100px; right: -90px;
-  animation-delay: -4s;
-}
-/* 크림-웜 오브 */
-.orb-3 {
   width: 300px; height: 300px;
-  background: radial-gradient(circle, #e8d8c4, transparent 70%);
-  top: 40%; left: 55%;
-  animation-delay: -8s;
+  background: #c8e7ff;
+  bottom: -50px; right: -50px;
+  animation-delay: -1s;
+}
+.orb-3 {
+  width: 250px; height: 250px;
+  background: #e2f0cb;
+  top: 30%; left: 40%;
+  animation-delay: -2s;
 }
 
-/* 아바타 그라디언트 링 — 베이지·모카·스모키블루 */
-.avatar-ring {
-  background: linear-gradient(135deg, #c9a882, #a89070, #7a9bb5);
-  padding: 3px;
-  border-radius: 9999px;
-}
-
-/* 링크 카드 — 크림 글래스모피즘 */
+/* 링크 카드 — 귀엽고 둥근 스타일 */
 .link-card {
-  background: rgba(255, 252, 245, 0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(180, 155, 120, 0.2);
-  box-shadow: 0 2px 12px rgba(160, 130, 90, 0.08);
-  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  background: #ffffff;
+  border-radius: 28px;
+  border: 3px solid transparent;
+  box-shadow: 0 8px 24px rgba(180, 190, 200, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .link-card:hover {
-  background: rgba(255, 253, 248, 0.92);
-  border-color: rgba(160, 130, 100, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 36px rgba(160, 130, 90, 0.15), 0 2px 8px rgba(122, 155, 181, 0.12);
+  transform: translateY(-6px) scale(1.02);
+  border-color: #ffd6e0;
+  box-shadow: 0 14px 28px rgba(255, 180, 200, 0.25);
 }
 .link-card:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(160, 130, 90, 0.1);
+  transform: translateY(0) scale(0.96);
+  border-color: #ffb7b2;
 }
 
 /* 파비콘 컨테이너 */
 .favicon-wrap {
-  background: rgba(201, 168, 130, 0.1);
-  border: 1px solid rgba(201, 168, 130, 0.25);
-  border-radius: 0.75rem;
+  background: #f4f0ec;
+  border-radius: 16px;
 }
 
-/* 그라디언트 텍스트 — 모카-베이지-스모키블루 */
+/* 그라디언트 텍스트 */
 .gradient-text {
-  background: linear-gradient(90deg, #a07850, #c9a882, #7a9bb5);
+  background: linear-gradient(90deg, #ff7eb3, #ff758c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* 구분선 그라디언트 */
+/* 구분선 */
 .divider-gradient {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(180, 150, 110, 0.4), rgba(122, 155, 181, 0.35), transparent);
+  height: 3px;
+  border-radius: 3px;
+  background: #f0e6e6;
 }
 
 /* 푸터 뱃지 */
 .footer-badge {
-  background: rgba(255, 252, 245, 0.7);
-  border: 1px solid rgba(180, 155, 120, 0.2);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #ffe6ea;
   border-radius: 9999px;
+  font-weight: bold;
 }
 
-/* 뱃지 shimmer — 따뜻한 베이지 shimmer */
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-.shimmer-badge {
-  background: linear-gradient(90deg,
-    rgba(180, 150, 110, 0.12) 0%,
-    rgba(201, 168, 130, 0.28) 40%,
-    rgba(122, 155, 181, 0.12) 80%
-  );
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-}
-
-/* ── 링크 추가 버튼 — 모카 브라운 그라디언트 ── */
+/* ── 링크 추가 버튼 — 말랑말랑한 핑크 그라디언트 ── */
 .add-link-btn {
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  color: #6d4c41;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.4);
 }
 .add-link-btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 10px 36px rgba(160, 120, 70, 0.35),
-    0 3px 10px rgba(122, 155, 181, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(255, 154, 158, 0.5);
 }
 .add-link-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 14px rgba(160, 120, 70, 0.25);
-}
-
-.add-link-bg {
-  background: linear-gradient(135deg, #b08560 0%, #c9a882 45%, #7a9bb5 100%);
-  transition: opacity 0.2s ease;
-}
-.add-link-btn:hover .add-link-bg { opacity: 0.92; }
-
-@keyframes add-link-sweep {
-  0%   { transform: translateX(-100%) skewX(-15deg); }
-  100% { transform: translateX(250%)  skewX(-15deg); }
-}
-.add-link-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.28) 50%,
-    transparent 100%
-  );
-  animation: add-link-sweep 2.4s ease-in-out infinite;
+  transform: scale(0.95);
 }
 
 .add-link-icon-wrap {
-  transition: background 0.2s ease, transform 0.2s ease;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
 }
 .add-link-btn:hover .add-link-icon-wrap {
-  background: rgba(255, 255, 255, 0.35);
-  transform: scale(1.1);
+  transform: rotate(90deg) scale(1.2);
+  background: #fff;
 }
 
 /* ── 다이얼로그 오버레이 ── */
 [data-slot="dialog-overlay"] {
-  background: rgba(120, 90, 55, 0.1);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(255, 240, 245, 0.6);
+  backdrop-filter: blur(8px);
 }
 
 /* ── 다이얼로그 컨텐츠 ── */
 .add-link-dialog {
-  background: rgba(255, 252, 246, 0.95) !important;
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(180, 150, 110, 0.25) !important;
-  box-shadow:
-    0 0 0 1px rgba(180, 150, 110, 0.1),
-    0 24px 64px rgba(120, 90, 55, 0.12),
-    0 0 80px rgba(201, 168, 130, 0.06);
-  color: #3d2b1a !important;
+  background: #ffffff !important;
+  border-radius: 32px !important;
+  border: 4px solid #ffe4e1 !important;
+  box-shadow: 0 20px 40px rgba(255, 180, 200, 0.2) !important;
+  color: #5d4037 !important;
 }
 
 /* ── 다이얼로그 입력 필드 ── */
 .dialog-input {
-  background: rgba(201, 168, 130, 0.06) !important;
-  border: 1px solid rgba(180, 150, 110, 0.25) !important;
-  color: #3d2b1a !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: #fcf8f5 !important;
+  border: 2px solid #f0e6e6 !important;
+  border-radius: 16px !important;
+  color: #5d4037 !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 .dialog-input::placeholder {
-  color: rgba(160, 120, 80, 0.4) !important;
+  color: #cbbab5 !important;
 }
 .dialog-input:focus {
-  border-color: rgba(160, 130, 90, 0.6) !important;
-  box-shadow: 0 0 0 3px rgba(160, 130, 90, 0.1) !important;
+  border-color: #ff9a9e !important;
+  box-shadow: 0 0 0 4px rgba(255, 154, 158, 0.2) !important;
   outline: none;
 }
